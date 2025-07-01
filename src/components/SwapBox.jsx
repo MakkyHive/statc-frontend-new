@@ -94,7 +94,7 @@ const SwapBox = () => {
           <input
             type="number"
             value={amountIn}
-            onChange={(e) => setAmountIn(e.target.value)}
+            onChange={(e) => setAmountIn(e.target.value)} 
             placeholder="0.00"
             className="flex-1 text-2xl bg-transparent text-white placeholder-white/40 outline-none"
           />
