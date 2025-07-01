@@ -1,0 +1,193 @@
+/* tw-safelist: animate-orb animate-gradient */
+
+
+@import "tailwindcss";
+
+html, body {
+  overflow-x: hidden;
+}
+
+
+@font-face {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  src: url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/webfonts/fa-solid-900.woff2") format("woff2");
+}
+
+
+@keyframes orbFloat {
+  0% { transform: translateY(0) scale(1); opacity: 0.7; }
+  50% { transform: translateY(-60vh) scale(1.5); opacity: 0.3; }
+  100% { transform: translateY(0) scale(1); opacity: 0.7; }
+}
+
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(131, 110, 249, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(131, 110, 249, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(131, 110, 249, 0); }
+}
+
+@layer utilities {
+  @keyframes spin-smooth {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .animate-spin-smooth {
+    animation: spin-smooth 1.2s linear infinite;
+  }
+
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  .animate-pulse-soft {
+    animation: pulse-soft 2s ease-in-out infinite;
+  }
+  .animate-gradient {
+    animation: gradientAnimation 15s ease infinite;
+    background: linear-gradient(135deg, #0a0a0a, #200052);
+    background-size: 400% 400%;
+  }
+
+
+  .section-spacing {
+    @apply px-4 sm:px-10 md:px-10 py-10 md:py-14;
+  }
+
+
+  .cta-button {
+    @apply inline-block font-bold rounded-full text-white no-underline relative overflow-hidden transition-all duration-300 z-[1];
+    background: linear-gradient(45deg, #836EF9, #4FACFE);
+  }
+
+  .cta-button::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 0%;
+    height: 100%;
+    z-index: -1;
+    background: linear-gradient(45deg, #4FACFE, #FF6EC7);
+    transition: all 0.5s ease;
+  }
+
+  .cta-button:hover::before {
+    width: 100%;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(131, 110, 249, 0.5);
+  }
+
+
+
+
+
+
+  .animate-fadeInUp {
+    animation: fadeInUp 1.2s ease-out both;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse 1.5s infinite;
+  }
+
+ 
+
+
+  .bg-section-gradient {
+    background: radial-gradient(circle at center, rgba(131, 110, 249, 0.1), transparent 70%);
+  }
+
+  .cta-button {
+    @apply inline-block font-bold rounded-full text-white no-underline relative overflow-hidden transition-all duration-300 z-[1] text-lg px-6 py-3 shadow-lg;
+    background: linear-gradient(45deg, #836EF9, #4FACFE);
+  }
+
+  .cta-button::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 0%;
+    height: 100%;
+    z-index: -1;
+    background: linear-gradient(45deg, #4FACFE, #FF6EC7);
+    transition: all 0.5s ease;
+  }
+
+  .cta-button:hover::before {
+    width: 100%;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(131, 110, 249, 0.5);
+  }
+
+  .section-title-underline::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    margin-top: 1rem;
+    margin-inline: auto;
+    background: linear-gradient(45deg, #836EF9, #4FACFE);
+    border-radius: 2px;
+  }
+
+  /* Responsive typography and tweaks */
+  @media (max-width: 1200px) {
+    .hero h1 { font-size: 3.8rem; }
+    .roadmap-phase h4 { font-size: 1.6rem; }
+  }
+
+  @media (max-width: 1024px) {
+    .hero h1 { font-size: 3.5rem; }
+    .hero p { font-size: 1.2rem; }
+    .section-title-underline,
+    .why-choose h3 { font-size: 2.5rem; }
+    .roadmap-phase { padding: 2rem; }
+  }
+
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 2.8rem; }
+    .hero p { font-size: 1.1rem; }
+    .cta-button { font-size: 1rem; padding: 0.7rem 1.5rem; }
+    .roadmap-phase h4 { font-size: 1.4rem; }
+    .feature-card, .chart-card { padding: 1.5rem; }
+  }
+
+  @media (max-width: 576px) {
+    .hero { padding: 7rem 1rem 5rem; }
+    .hero h1 { font-size: 2.2rem; }
+    .hero p { font-size: 1.05rem; }
+    .section-title-underline,
+    .why-choose h3 { font-size: 1.8rem; }
+    .cta-button { max-width: 250px; margin-inline: auto; display: block; }
+  }
+
+  @media (max-width: 480px) {
+    .logo { font-size: 1.3rem; }
+    .hero h1 { font-size: 2rem; }
+    .why-choose p,
+    .feature-card li { font-size: 0.95rem; }
+  }
+
+  @media (max-width: 380px) {
+    .hero h1 { font-size: 1.8rem; }
+    .cta-button { padding: 0.6rem 1.2rem; font-size: 0.9rem; }
+  }
+}
