@@ -1,12 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import SwapHeader from "../components/SwapHeader";
 import { usePrivy } from "@privy-io/react-auth";
 import { ethers } from "ethers";
 
 const dummyTokens = [
-  { symbol: "ETH", name: "Ethereum", address: "", decimals: 18, logo: "/eth.png" },
-  { symbol: "USDC", name: "USD Coin", address: "0xUsdcAddress", decimals: 6, logo: "/usdc.png" },
-  { symbol: "DAI", name: "Dai", address: "0xDaiAddress", decimals: 18, logo: "/dai.png" },
+  {
+    symbol: "ETH",
+    name: "Ethereum",
+    address: "",
+    decimals: 18,
+    logo: "/eth.png",
+  },
+  {
+    symbol: "USDC",
+    name: "USD Coin",
+    address: "0xUsdcAddress",
+    decimals: 6,
+    logo: "/usdc.png",
+  },
+  {
+    symbol: "DAI",
+    name: "Dai",
+    address: "0xDaiAddress",
+    decimals: 18,
+    logo: "/dai.png",
+  },
 ];
 
 const Portfolio = () => {
@@ -16,25 +34,33 @@ const Portfolio = () => {
   const [tokenData, setTokenData] = useState([]);
   const [activeTab, setActiveTab] = useState("assets");
 
-  const fetchBalances = async () => {
-    if (!wallet?.address) return;
+  const fetchBalances = useCallback(async () => {
+    if (!wallet?.address || !wallet?.ethereum) return;
 
     try {
       const provider = new ethers.providers.Web3Provider(wallet.ethereum);
-      const signer = provider.getSigner();
 
       const updated = await Promise.all(
         dummyTokens.map(async (token) => {
           let balance = "0";
+
           if (token.symbol === "ETH") {
             balance = await provider.getBalance(wallet.address);
           } else {
-            const erc20 = new ethers.Contract(token.address, ["function balanceOf(address) view returns (uint256)"], signer);
+            const erc20 = new ethers.Contract(
+              token.address,
+              ["function balanceOf(address) view returns (uint256)"],
+              provider
+            );
+
             balance = await erc20.balanceOf(wallet.address);
           }
+
           return {
             ...token,
-            balance: parseFloat(ethers.utils.formatUnits(balance, token.decimals)),
+            balance: parseFloat(
+              ethers.utils.formatUnits(balance, token.decimals)
+            ),
             price: token.symbol === "ETH" ? 3120 : 1,
           };
         })
@@ -44,13 +70,13 @@ const Portfolio = () => {
     } catch (error) {
       console.error("Failed to fetch balances:", error);
     }
-  };
+  }, [wallet?.address, wallet?.ethereum]);
 
   useEffect(() => {
     if (ready && wallet?.address) {
       fetchBalances();
     }
-  }, [ready, wallet?.address]);
+  }, [ready, wallet?.address, fetchBalances]);
 
   const totalValue = tokenData.reduce(
     (acc, token) => acc + token.balance * token.price,
@@ -66,14 +92,21 @@ const Portfolio = () => {
           <h2 className="text-3xl font-bold mb-6">Your Portfolio</h2>
 
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6 mb-6 backdrop-blur-md shadow-md">
-            <p className="text-white/70 text-sm mb-1">Total Portfolio Value</p>
+            <p className="text-white/70 text-sm mb-1">
+              Total Portfolio Value
+            </p>
+
             <h3 className="text-3xl font-semibold text-[#4FACFE]">
-              ${totalValue.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+              $
+              {totalValue.toLocaleString(undefined, {
+                maximumFractionDigits: 2,
+              })}
             </h3>
           </div>
 
           <div className="mb-6 flex gap-4">
             <button
+              type="button"
               onClick={() => setActiveTab("assets")}
               className={`px-4 py-2 rounded-lg text-sm font-semibold ${
                 activeTab === "assets"
@@ -83,7 +116,9 @@ const Portfolio = () => {
             >
               Assets
             </button>
+
             <button
+              type="button"
               onClick={() => setActiveTab("positions")}
               className={`px-4 py-2 rounded-lg text-sm font-semibold ${
                 activeTab === "positions"
@@ -103,19 +138,29 @@ const Portfolio = () => {
                 <div>Price</div>
                 <div>Value</div>
               </div>
+
               {tokenData.map((token) => (
                 <div
                   key={token.symbol}
                   className="grid grid-cols-4 items-center py-3 border-b border-white/5 last:border-none hover:bg-white/5 rounded-lg px-2"
                 >
                   <div className="flex items-center gap-3">
-                    <img src={token.logo} alt={token.symbol} className="w-6 h-6 rounded-full" />
+                    <img
+                      src={token.logo}
+                      alt={token.symbol}
+                      className="w-6 h-6 rounded-full"
+                    />
+
                     <span className="font-medium">{token.symbol}</span>
                   </div>
+
                   <div>{token.balance.toFixed(4)}</div>
+
                   <div>${token.price.toFixed(2)}</div>
+
                   <div>
-                    ${(token.balance * token.price).toLocaleString(undefined, {
+                    $
+                    {(token.balance * token.price).toLocaleString(undefined, {
                       maximumFractionDigits: 2,
                     })}
                   </div>

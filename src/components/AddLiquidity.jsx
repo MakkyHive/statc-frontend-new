@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+
+import React, { useState, useEffect, useCallback } from "react";
 import { usePrivy } from "@privy-io/react-auth";
 import { ethers } from "ethers";
 import TokenSelector from "./TokenSelector";
@@ -7,6 +8,7 @@ import { allTokens } from "@/lib/constants";
 const AddLiquidity = () => {
   const { user } = usePrivy();
   const embeddedWallet = user?.wallet;
+
   const [tokenA, setTokenA] = useState(null);
   const [tokenB, setTokenB] = useState(null);
   const [amountA, setAmountA] = useState("");
@@ -16,63 +18,144 @@ const AddLiquidity = () => {
   const [status, setStatus] = useState("");
   const [showTokenModal, setShowTokenModal] = useState(null);
 
-  const fetchBalance = async (token, setter) => {
-    if (!embeddedWallet || !token) return;
-    const provider = new ethers.providers.Web3Provider(embeddedWallet.ethereum);
-    const userAddress = user?.wallet?.address;
-    try {
-      let balance;
-      if (token.symbol === "MON") {
-        balance = await provider.getBalance(userAddress);
-        balance = ethers.utils.formatEther(balance);
-      } else {
-        const tokenContract = new ethers.Contract(token.address, ["function balanceOf(address) view returns (uint)"], provider);
-        balance = await tokenContract.balanceOf(userAddress);
-        balance = ethers.utils.formatUnits(balance, token.decimals);
+  const fetchBalance = useCallback(
+    async (token, setter) => {
+      if (!embeddedWallet || !token) return;
+
+      const provider = new ethers.providers.Web3Provider(
+        embeddedWallet.ethereum
+      );
+
+      const userAddress = user?.wallet?.address;
+
+      try {
+        let balance;
+
+        if (token.symbol === "MON") {
+          balance = await provider.getBalance(userAddress);
+          balance = ethers.utils.formatEther(balance);
+        } else {
+          const tokenContract = new ethers.Contract(
+            token.address,
+            [
+              "function balanceOf(address) view returns (uint)"
+            ],
+            provider
+          );
+
+          balance = await tokenContract.balanceOf(userAddress);
+          balance = ethers.utils.formatUnits(
+            balance,
+            token.decimals
+          );
+        }
+
+        setter(parseFloat(balance).toFixed(6));
+      } catch (error) {
+        console.error("Error fetching balance:", error);
+        setter("0.000000");
       }
-      setter(parseFloat(balance).toFixed(6));
-    } catch (err) {
-      setter("0.000000");
-    }
-  };
+    },
+    [embeddedWallet, user]
+  );
 
   useEffect(() => {
     fetchBalance(tokenA, setBalanceA);
     fetchBalance(tokenB, setBalanceB);
-  }, [tokenA, tokenB]);
+  }, [tokenA, tokenB, fetchBalance]);
 
   const handleAddLiquidity = async (e) => {
     e.preventDefault();
     setStatus("Processing...");
+
     try {
-      if (!embeddedWallet) return setStatus("No wallet found.");
-      const provider = new ethers.providers.Web3Provider(embeddedWallet.ethereum);
+      if (!embeddedWallet) {
+        return setStatus("No wallet found.");
+      }
+
+      const provider = new ethers.providers.Web3Provider(
+        embeddedWallet.ethereum
+      );
+
       const signer = provider.getSigner();
+
       const parsedAmountA = ethers.utils.parseEther(amountA);
       const parsedAmountB = ethers.utils.parseEther(amountB);
 
-      const tokenAContract = new ethers.Contract(tokenA.address, ["function approve(address,uint256) public returns (bool)"], signer);
-      await (await tokenAContract.approve("0xYourContractAddressHere", parsedAmountA)).wait();
+      const tokenAContract = new ethers.Contract(
+        tokenA.address,
+        [
+          "function approve(address,uint256) public returns (bool)"
+        ],
+        signer
+      );
 
-      const tokenBContract = new ethers.Contract(tokenB.address, ["function approve(address,uint256) public returns (bool)"], signer);
-      await (await tokenBContract.approve("0xYourContractAddressHere", parsedAmountB)).wait();
+      await (
+        await tokenAContract.approve(
+          "0xYourContractAddressHere",
+          parsedAmountA
+        )
+      ).wait();
 
-      const contract = new ethers.Contract("0xYourContractAddressHere", [
-        {
-          inputs: [
-            { internalType: "address", name: "tokenA", type: "address" },
-            { internalType: "address", name: "tokenB", type: "address" },
-            { internalType: "uint256", name: "amountA", type: "uint256" },
-            { internalType: "uint256", name: "amountB", type: "uint256" }
-          ],
-          name: "addLiquidity",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function"
-        }
-      ], signer);
+      const tokenBContract = new ethers.Contract(
+        tokenB.address,
+        [
+          "function approve(address,uint256) public returns (bool)"
+        ],
+        signer
+      );
 
-      await (await contract.addLiquidity(tokenA.address, tokenB.address, parsedAmountA, parsedAmountB)).wait();
+      await (
+        await tokenBContract.approve(
+          "0xYourContractAddressHere",
+          parsedAmountB
+        )
+      ).wait();
+
+      const contract = new ethers.Contract(
+        "0xYourContractAddressHere",
+        [
+          {
+            inputs: [
+              {
+                internalType: "address",
+                name: "tokenA",
+                type: "address"
+              },
+              {
+                internalType: "address",
+                name: "tokenB",
+                type: "address"
+              },
+              {
+                internalType: "uint256",
+                name: "amountA",
+                type: "uint256"
+              },
+              {
+                internalType: "uint256",
+                name: "amountB",
+                type: "uint256"
+              }
+            ],
+            name: "addLiquidity",
+            outputs: [],
+            stateMutability: "nonpayable",
+            type: "function"
+          }
+        ],
+        signer
+      );
+
+      await (
+        await contract.addLiquidity(
+          tokenA.address,
+          tokenB.address,
+          parsedAmountA,
+          parsedAmountB
+        )
+      ).wait();
+
       setStatus("✅ Liquidity added successfully!");
     } catch (error) {
       console.error(error);
@@ -82,6 +165,7 @@ const AddLiquidity = () => {
 
   return (
     <form onSubmit={handleAddLiquidity} className="space-y-6">
+      {/* Token A */}
       <div>
         <button
           type="button"
@@ -90,14 +174,23 @@ const AddLiquidity = () => {
         >
           {tokenA ? (
             <div className="flex items-center gap-2">
-              <img src={tokenA.logo || "/default-token.png"} className="w-5 h-5 rounded-full" />
+              <img
+                src={tokenA.logo || "/default-token.png"}
+                className="w-5 h-5 rounded-full"
+                alt={tokenA.symbol}
+              />
               <span>{tokenA.symbol}</span>
             </div>
           ) : (
             <span>Select Token A</span>
           )}
         </button>
-        {balanceA && <p className="text-xs text-white/50 mt-1">Balance: {balanceA}</p>}
+
+        {balanceA && (
+          <p className="text-xs text-white/50 mt-1">
+            Balance: {balanceA}
+          </p>
+        )}
 
         <input
           type="number"
@@ -109,8 +202,12 @@ const AddLiquidity = () => {
         />
       </div>
 
-      <div className="flex justify-center text-white/40 text-xl">+</div>
+      {/* Plus */}
+      <div className="flex justify-center text-white/40 text-xl">
+        +
+      </div>
 
+      {/* Token B */}
       <div>
         <button
           type="button"
@@ -119,14 +216,23 @@ const AddLiquidity = () => {
         >
           {tokenB ? (
             <div className="flex items-center gap-2">
-              <img src={tokenB.logo || "/default-token.png"} className="w-5 h-5 rounded-full" />
+              <img
+                src={tokenB.logo || "/default-token.png"}
+                className="w-5 h-5 rounded-full"
+                alt={tokenB.symbol}
+              />
               <span>{tokenB.symbol}</span>
             </div>
           ) : (
             <span>Select Token B</span>
           )}
         </button>
-        {balanceB && <p className="text-xs text-white/50 mt-1">Balance: {balanceB}</p>}
+
+        {balanceB && (
+          <p className="text-xs text-white/50 mt-1">
+            Balance: {balanceB}
+          </p>
+        )}
 
         <input
           type="number"
@@ -138,6 +244,7 @@ const AddLiquidity = () => {
         />
       </div>
 
+      {/* Submit */}
       <button
         type="submit"
         className="w-full py-2 bg-gradient-to-r from-[#836EF9] to-[#4FACFE] rounded-full font-semibold text-white hover:opacity-90 transition"
@@ -145,13 +252,23 @@ const AddLiquidity = () => {
         Add Liquidity
       </button>
 
-      {status && <p className="text-sm text-white/70 text-center mt-2">{status}</p>}
+      {status && (
+        <p className="text-sm text-white/70 text-center mt-2">
+          {status}
+        </p>
+      )}
 
+      {/* Token Selector */}
       {showTokenModal && (
         <TokenSelector
           tokens={allTokens}
           onSelect={(token) => {
-            showTokenModal === "A" ? setTokenA(token) : setTokenB(token);
+            if (showTokenModal === "A") {
+              setTokenA(token);
+            } else {
+              setTokenB(token);
+            }
+
             setShowTokenModal(null);
           }}
           close={() => setShowTokenModal(null)}
@@ -162,3 +279,4 @@ const AddLiquidity = () => {
 };
 
 export default AddLiquidity;
+

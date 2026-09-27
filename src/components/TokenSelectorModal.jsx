@@ -1,57 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-const TokenSelectorModal = ({ tokens = [], onSelect, onClose }) => {
-  const [search, setSearch] = useState('');
+const TokenSelectorModal = ({ tokens, onSelect, onClose }) => {
+  const [search, setSearch] = useState("");
 
-  const filtered = tokens.filter(token =>
+  const filtered = tokens.filter((token) =>
     token.symbol.toLowerCase().includes(search.toLowerCase()) ||
     token.name.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
-      <div className="w-full max-w-md bg-[rgba(28,28,48,0.95)] border border-white/10 rounded-2xl shadow-xl p-6 relative text-white">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+      <div className="bg-[#1a1a2f] w-full max-w-md rounded-2xl p-6 border border-white/10 shadow-xl relative">
+        {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-5 text-white/60 hover:text-white text-2xl"
+          className="absolute top-3 right-4 text-white/70 hover:text-white text-xl"
         >
           &times;
         </button>
 
-        <h2 className="text-xl font-bold mb-4">Select a token</h2>
+        <h2 className="text-lg font-semibold text-white mb-4">Select a Token</h2>
 
         <input
           type="text"
-          placeholder="Search name or symbol"
+          placeholder="Search token"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full px-4 py-2 mb-4 rounded-lg bg-[#2c2c44] border border-white/10 text-white placeholder-white/40 focus:outline-none"
+          className="w-full px-4 py-2 mb-4 rounded-lg bg-[#2b2b44] border border-white/10 text-white placeholder:text-white/40 focus:outline-none"
         />
 
-        <div className="max-h-[400px] overflow-y-auto space-y-2 pr-1">
-          {filtered.length > 0 ? (
-            filtered.map((token) => (
-              <button
-                key={token.address}
-                onClick={() => {
-                  onSelect(token);
-                  onClose();
-                }}
-                className="w-full flex items-center gap-3 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 transition text-left"
-              >
-                <img
-                  src={token.logo || '/default-token.png'}
-                  alt={token.symbol}
-                  className="w-6 h-6 rounded-full"
-                />
-                <div>
-                  <div className="text-sm font-medium">{token.symbol}</div>
-                  <div className="text-xs text-white/60">{token.name}</div>
-                </div>
-              </button>
-            ))
-          ) : (
-            <p className="text-white/50 text-center text-sm py-6">No tokens found.</p>
+        <div className="max-h-80 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+          {filtered.map((token) => (
+            <button
+              key={token.address}
+              onClick={() => {
+                onSelect(token);
+                onClose();
+              }}
+              className="w-full flex items-center gap-3 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 transition text-left"
+            >
+              <img
+                src={token.logo || "/default-token.png"}
+                alt={token.symbol}
+                className="w-6 h-6 rounded-full object-contain"
+              />
+              <div className="text-white text-left">
+                <div className="text-sm font-medium leading-tight">{token.symbol}</div>
+                <div className="text-xs text-white/60 leading-none">{token.name}</div>
+              </div>
+            </button>
+          ))}
+
+          {filtered.length === 0 && (
+            <p className="text-white/50 text-sm text-center py-4">No tokens found.</p>
           )}
         </div>
       </div>

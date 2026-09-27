@@ -4,13 +4,13 @@ import { usePrivy, useLogin, useLogout } from "@privy-io/react-auth";
 import { FaBell, FaGlobe, FaBars, FaTimes } from "react-icons/fa";
 
 const LiquidityHeader = () => {
-  const { ready, authenticated } = usePrivy();
+  const { authenticated } = usePrivy();
   const login = useLogin();
   const logout = useLogout();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="w-full sticky px-6 py-5 bg-[#10002B] text-white shadow-md border-b border-white/10">
+    <header className="w-full px-6 py-5 bg-[#10002B] text-white shadow-md border-b border-white/10">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* LEFT: Logo + Nav */}
         <div className="flex items-center gap-10">

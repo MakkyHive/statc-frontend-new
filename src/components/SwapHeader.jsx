@@ -5,7 +5,7 @@ import { FaBell, FaGlobe, FaBars, FaTimes } from "react-icons/fa";
 
 
 const SwapHeader = () => {
-  const { ready, authenticated } = usePrivy();
+  const { authenticated } = usePrivy();
  const { login } = useLogin();
 const { logout } = useLogout();
 

@@ -1,4 +1,5 @@
 // Token Modal Component
+import { ethers } from "ethers";
 class TokenModal {
   constructor(options = {}) {
     this.onSelectToken = options.onSelectToken || function() {};
@@ -338,48 +339,48 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Helper function to initialize token modals
-function initializeTokenModals(options = {}) {
-  const { tokens, defaultTokens, onSelectTokenA, onSelectTokenB, balances, provider, userAddress } = options;
+// function initializeTokenModals(options = {}) {
+//   const { tokens, defaultTokens, onSelectTokenA, onSelectTokenB, balances, provider, userAddress } = options;
 
-  // Create token modal A
-  window.tokenModals.A = new TokenModal({
-    side: 'A',
-    tokens: tokens || [],
-    defaultTokens: defaultTokens || [],
-    onSelectToken: onSelectTokenA || function() {},
-    balances: balances || {},
-    provider,
-    userAddress
-  });
+//   // Create token modal A
+//   window.tokenModals.A = new TokenModal({
+//     side: 'A',
+//     tokens: tokens || [],
+//     defaultTokens: defaultTokens || [],
+//     onSelectToken: onSelectTokenA || function() {},
+//     balances: balances || {},
+//     provider,
+//     userAddress
+//   });
 
-  // Create token modal B
-  window.tokenModals.B = new TokenModal({
-    side: 'B',
-    tokens: tokens || [],
-    defaultTokens: defaultTokens || [],
-    onSelectToken: onSelectTokenB || function() {},
-    balances: balances || {},
-    provider,
-    userAddress
-  });
+//   // Create token modal B
+//   window.tokenModals.B = new TokenModal({
+//     side: 'B',
+//     tokens: tokens || [],
+//     defaultTokens: defaultTokens || [],
+//     onSelectToken: onSelectTokenB || function() {},
+//     balances: balances || {},
+//     provider,
+//     userAddress
+//   });
 
-  // Add click event listeners to token selectors
-  const tokenASelect = document.getElementById('tokenASelect');
-  const tokenBSelect = document.getElementById('tokenBSelect');
+//   // Add click event listeners to token selectors
+//   const tokenASelect = document.getElementById('tokenASelect');
+//   const tokenBSelect = document.getElementById('tokenBSelect');
 
-  if (tokenASelect) {
-    tokenASelect.removeEventListener('click', window.openTokenModalA);
-    window.openTokenModalA = function() {
-      window.tokenModals.A.open();
-    };
-    tokenASelect.addEventListener('click', window.openTokenModalA);
-  }
+//   if (tokenASelect) {
+//     tokenASelect.removeEventListener('click', window.openTokenModalA);
+//     window.openTokenModalA = function() {
+//       window.tokenModals.A.open();
+//     };
+//     tokenASelect.addEventListener('click', window.openTokenModalA);
+//   }
 
-  if (tokenBSelect) {
-    tokenBSelect.removeEventListener('click', window.openTokenModalB);
-    window.openTokenModalB = function() {
-      window.tokenModals.B.open();
-    };
-    tokenBSelect.addEventListener('click', window.openTokenModalB);
-  }
-}
+//   if (tokenBSelect) {
+//     tokenBSelect.removeEventListener('click', window.openTokenModalB);
+//     window.openTokenModalB = function() {
+//       window.tokenModals.B.open();
+//     };
+//     tokenBSelect.addEventListener('click', window.openTokenModalB);
+//   }
+// }
