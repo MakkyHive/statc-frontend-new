@@ -1,74 +1,52 @@
 Mon Bridge DEX
 
-A DEX frontend I'm building for Monad.
+A DEX frontend I'm building with React and ethers.js.
 
-Built with React + Vite, with Privy for wallet connection and the usual Web3 stuff around it.
+This started as a frontend recreation and has grown into a proper Web3 project with wallet connection, token selection, swapping, liquidity management and portfolio views.
 
-What it has
-Wallet connection
-Swap UI
-Liquidity UI
-Portfolio
-Token selection
-Wallet balances
-Responsive layout
-Monad integration
-Privy wallet integration
+It's still a work in progress, so some of the contract/network configuration is being finalized.
 
-Some parts are still being worked on and tested. The UI is mostly there; I'm currently going through the actual network/config/transaction side to make sure everything is using the right contracts and addresses.
-
-Stack
+Built With
 React
 Vite
-JavaScript
+Tailwind CSS
+ethers.js 5.7.2
 Privy
-Monad
-Git / GitHub
-Run it locally
-
-Clone the repo:
-
-git clone https://github.com/MakkyHive/statc-frontend-new.git
-cd statc-frontend-new
-
-Install:
-
+Framer Motion
+React Router
+What's Working
+Privy wallet connection
+Token selector
+Token balances
+Swap UI
+Add liquidity UI
+Remove liquidity UI
+Portfolio page
+Responsive layout
+Web3 contract interaction setup
+ERC-20 approvals
+Router contract integration
+Running It
 npm install
-
-Start:
-
 npm run dev
 
 Build:
 
 npm run build
-Environment
+Notes
 
-Create a .env file in the root of the project and add the environment variables used by the app.
+I'm currently testing the contract interactions and network/token configuration before putting the live version online.
 
-Don't put private keys, seed phrases or other sensitive credentials in the repo.
+Some token addresses in the current development setup are placeholders and should not be treated as production configuration.
 
-Current status
+Status
 
-The frontend is up and the main DEX screens are in place.
+Still building.
 
-Still checking/fixing:
+The frontend is in place. Next up is finishing the network configuration, testing the actual transactions, and deploying it.
 
-Monad network configuration
-Token addresses
-Contract addresses
-Swap transactions
-Liquidity transactions
-Wallet transaction flow
-Error handling
-Build size / performance
+Author
 
-Basically, the next step is making sure everything that looks like it works actually works on-chain.
+MakkyHive
 
-Project
-
-GitHub:
-
-https://github.com/MakkyHive/statc-frontend-new
-
-Built while learning and building on Monad.
+GitHub: https://github.com/MakkyHive
