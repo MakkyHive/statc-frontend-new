@@ -1,12 +1,74 @@
-# React + Vite
+Mon Bridge DEX
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A DEX frontend I'm building for Monad.
 
-Currently, two official plugins are available:
+Built with React + Vite, with Privy for wallet connection and the usual Web3 stuff around it.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+What it has
+Wallet connection
+Swap UI
+Liquidity UI
+Portfolio
+Token selection
+Wallet balances
+Responsive layout
+Monad integration
+Privy wallet integration
 
-## Expanding the ESLint configuration
+Some parts are still being worked on and tested. The UI is mostly there; I'm currently going through the actual network/config/transaction side to make sure everything is using the right contracts and addresses.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Stack
+React
+Vite
+JavaScript
+Privy
+Monad
+Git / GitHub
+Run it locally
+
+Clone the repo:
+
+git clone https://github.com/MakkyHive/statc-frontend-new.git
+cd statc-frontend-new
+
+Install:
+
+npm install
+
+Start:
+
+npm run dev
+
+Build:
+
+npm run build
+Environment
+
+Create a .env file in the root of the project and add the environment variables used by the app.
+
+Don't put private keys, seed phrases or other sensitive credentials in the repo.
+
+Current status
+
+The frontend is up and the main DEX screens are in place.
+
+Still checking/fixing:
+
+Monad network configuration
+Token addresses
+Contract addresses
+Swap transactions
+Liquidity transactions
+Wallet transaction flow
+Error handling
+Build size / performance
+
+Basically, the next step is making sure everything that looks like it works actually works on-chain.
+
+Project
+
+GitHub:
+
+https://github.com/MakkyHive/statc-frontend-new
+
+Built while learning and building on Monad.
