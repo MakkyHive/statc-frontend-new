@@ -6,9 +6,12 @@ export const routerAbi = [
       { name: "amountIn", type: "uint256" },
       { name: "path", type: "address[]" }
     ],
-    outputs: [{ name: "amounts", type: "uint256[]" }],
+    outputs: [
+      { name: "amounts", type: "uint256[]" }
+    ],
     stateMutability: "view"
   },
+
   {
     name: "swapExactETHForTokens",
     type: "function",
@@ -18,9 +21,12 @@ export const routerAbi = [
       { name: "to", type: "address" },
       { name: "deadline", type: "uint256" }
     ],
-    outputs: [{ name: "amounts", type: "uint256[]" }],
+    outputs: [
+      { name: "amounts", type: "uint256[]" }
+    ],
     stateMutability: "payable"
   },
+
   {
     name: "swapExactTokensForETH",
     type: "function",
@@ -31,9 +37,12 @@ export const routerAbi = [
       { name: "to", type: "address" },
       { name: "deadline", type: "uint256" }
     ],
-    outputs: [{ name: "amounts", type: "uint256[]" }],
+    outputs: [
+      { name: "amounts", type: "uint256[]" }
+    ],
     stateMutability: "nonpayable"
   },
+
   {
     name: "swapExactTokensForTokens",
     type: "function",
@@ -44,7 +53,9 @@ export const routerAbi = [
       { name: "to", type: "address" },
       { name: "deadline", type: "uint256" }
     ],
-    outputs: [{ name: "amounts", type: "uint256[]" }],
+    outputs: [
+      { name: "amounts", type: "uint256[]" }
+    ],
     stateMutability: "nonpayable"
   }
 ];
